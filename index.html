@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Sharp TV Dashboard</title>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: #101827;
+  color: white;
+  font-family: Arial, sans-serif;
+}
+header {
+  padding: 45px 65px 20px;
+}
+h1 { font-size: 45px; margin: 0; }
+#clock {
+  float: right;
+  font-size: 28px;
+  color: #a8c5e8;
+}
+.subtitle {
+  color: #aabbd0;
+  font-size: 22px;
+  margin-top: 15px;
+}
+main { padding: 35px 60px; }
+.tile {
+  display: inline-block;
+  vertical-align: top;
+  width: 28%;
+  height: 190px;
+  margin: 1%;
+  padding: 35px 15px;
+  text-align: center;
+  background: #253b59;
+  border: 5px solid transparent;
+  border-radius: 15px;
+}
+.tile.selected {
+  border-color: #54d9ff;
+  background: #355b87;
+}
+.symbol { font-size: 55px; }
+.name { font-size: 25px; margin-top: 12px; }
+footer {
+  padding: 15px 65px;
+  font-size: 20px;
+  color: #aabbd0;
+}
+</style>
+</head>
+<body>
+<header>
+  <div id="clock"></div>
+  <h1>Sharp TV Dashboard</h1>
+  <div class="subtitle">Custom Smart TV Interface v0.1</div>
+</header>
+
+<main>
+  <div class="tile selected">
+    <div class="symbol">&#9654;</div>
+    <div class="name">YouTube</div>
+  </div>
+  <div class="tile">
+    <div class="symbol">&#9835;</div>
+    <div class="name">Music</div>
+  </div>
+  <div class="tile">
+    <div class="symbol">&#9783;</div>
+    <div class="name">Media</div>
+  </div>
+  <div class="tile">
+    <div class="symbol">&#9733;</div>
+    <div class="name">Favorites</div>
+  </div>
+  <div class="tile">
+    <div class="symbol">&#9881;</div>
+    <div class="name">Settings</div>
+  </div>
+  <div class="tile">
+    <div class="symbol">&#9432;</div>
+    <div class="name">System Info</div>
+  </div>
+</main>
+
+<footer id="status">
+Use arrow keys to navigate. Press OK to select.
+</footer>
+
+<script>
+var tiles = document.getElementsByClassName("tile");
+var selected = 0;
+
+function updateSelection() {
+  for (var i = 0; i < tiles.length; i++) {
+    tiles[i].className = "tile";
+  }
+  tiles[selected].className = "tile selected";
+}
+
+function updateClock() {
+  var now = new Date();
+  document.getElementById("clock").innerHTML =
+    now.toLocaleTimeString();
+}
+
+document.onkeydown = function(e) {
+  e = e || window.event;
+  var key = e.keyCode || e.which;
+  var next = selected;
+
+  if (key === 37 && selected % 3 > 0)
+    next--;
+  if (key === 39 && selected % 3 < 2)
+    next++;
+  if (key === 38 && selected >= 3)
+    next -= 3;
+  if (key === 40 && selected < 3)
+    next += 3;
+
+  if (next !== selected) {
+    selected = next;
+    updateSelection();
+  }
+
+  if (key === 13) {
+    var name = tiles[selected]
+      .getElementsByClassName("name")[0].innerHTML;
+    document.getElementById("status").innerHTML =
+      "Selected: " + name +
+      " | Feature coming soon.";
+  }
+
+  if (key >= 37 && key <= 40) {
+    if (e.preventDefault) e.preventDefault();
+    return false;
+  }
+};
+
+updateClock();
+setInterval(updateClock, 1000);
+</script>
+</body>
+</html>
